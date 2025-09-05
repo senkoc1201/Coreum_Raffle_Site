@@ -1,0 +1,423 @@
+.create-raffle-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  
+  h2 {
+    color: #20C789;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+  
+  p {
+    color: #ccc;
+    font-size: 1.1rem;
+  }
+}
+
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  
+  &.alert-success {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    color: #4caf50;
+    
+    i {
+      color: #4caf50;
+    }
+  }
+  
+  &.alert-error {
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    color: #f44336;
+    
+    i {
+      color: #f44336;
+    }
+  }
+  
+  .alert-content {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    
+    i {
+      font-size: 1.5rem;
+      margin-top: 0.25rem;
+    }
+    
+    h4 {
+      margin: 0 0 0.5rem 0;
+      font-weight: 600;
+    }
+    
+    p {
+      margin: 0;
+      opacity: 0.9;
+    }
+  }
+  
+  .alert-close {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    opacity: 0.7;
+    
+    &:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+.create-raffle-content {
+  display: grid;
+  gap: 3rem;
+}
+
+.nft-selection-section {
+  h3 {
+    color: #20C789;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.nft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.nft-card {
+  background: rgba(45, 45, 45, 0.8);
+  border: 2px solid rgba(32, 199, 137, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  
+  &:hover {
+    border-color: rgba(32, 199, 137, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(32, 199, 137, 0.2);
+  }
+  
+  &.selected {
+    border-color: #20C789;
+    background: rgba(32, 199, 137, 0.1);
+    
+    .nft-overlay {
+      opacity: 1;
+    }
+  }
+  
+  .nft-image {
+    position: relative;
+    margin-bottom: 1rem;
+    
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    
+    .nft-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(32, 199, 137, 0.8);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      
+      i {
+        font-size: 3rem;
+        color: white;
+      }
+    }
+  }
+  
+  .nft-info {
+    h4 {
+      color: #20C789;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    
+    p {
+      color: #ccc;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .token-id {
+      color: #888;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.no-nfts {
+  text-align: center;
+  padding: 3rem;
+  background: rgba(45, 45, 45, 0.6);
+  border-radius: 16px;
+  border: 2px dashed rgba(32, 199, 137, 0.3);
+  
+  i {
+    font-size: 3rem;
+    color: #20C789;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+  
+  p {
+    color: #ccc;
+    font-size: 1.1rem;
+  }
+}
+
+.raffle-form {
+  background: rgba(45, 45, 45, 0.8);
+  border: 1px solid rgba(32, 199, 137, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  
+  h3 {
+    color: #20C789;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+  
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #20C789;
+    font-weight: 600;
+    
+    i {
+      font-size: 0.9rem;
+    }
+  }
+  
+  input, select, textarea {
+    padding: 0.75rem;
+    background: rgba(26, 26, 26, 0.8);
+    border: 2px solid rgba(32, 199, 137, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: #20C789;
+    }
+    
+    &::placeholder {
+      color: #888;
+    }
+    
+    &:invalid {
+      border-color: rgba(244, 67, 54, 0.5);
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .character-count {
+    align-self: flex-end;
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    color: #888;
+  }
+  
+  .error-message {
+    margin-top: 0.25rem;
+    color: #f44336;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    
+    &::before {
+      content: '⚠';
+      font-size: 0.7rem;
+    }
+  }
+}
+
+.raffle-preview {
+  background: rgba(26, 26, 26, 0.6);
+  border: 1px solid rgba(32, 199, 137, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  
+  h4 {
+    color: #20C789;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .preview-content {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    
+    .preview-nft {
+      img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+    }
+    
+    .preview-details {
+      h5 {
+        color: #20C789;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+      }
+      
+      .preview-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
+        
+        .stat {
+          display: flex;
+          flex-direction: column;
+          
+          .label {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+          }
+          
+          .value {
+            color: #fff;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}
+
+.form-actions {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(32, 199, 137, 0.2);
+  
+  .btn-large {
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .create-raffle-container {
+    padding: 0 0.5rem;
+  }
+  
+  .section-header h2 {
+    font-size: 2rem;
+  }
+  
+  .nft-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .preview-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    
+    .preview-nft {
+      text-align: center;
+      
+      img {
+        width: 200px;
+        height: 200px;
+      }
+    }
+  }
+  
+  .raffle-form {
+    padding: 1rem;
+  }
+}

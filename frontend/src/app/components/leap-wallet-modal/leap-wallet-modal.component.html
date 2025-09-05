@@ -1,0 +1,111 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <i class="fas fa-wallet"></i>
+        Connect Leap Wallet
+      </h2>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Connection Section -->
+      <div class="connection-section" *ngIf="leapWalletService.isWalletInstalled()">
+        <div class="wallet-info">
+          <div class="wallet-icon">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <div class="wallet-details">
+            <h3>Leap Wallet</h3>
+            <p>Connect to Coreum blockchain</p>
+          </div>
+        </div>
+
+        <button 
+          class="connect-btn"
+          (click)="connectWallet()"
+          [disabled]="connecting">
+          <i class="fas fa-plug" *ngIf="!connecting"></i>
+          <i class="fas fa-spinner fa-spin" *ngIf="connecting"></i>
+          {{ connecting ? 'Connecting...' : 'Connect Wallet' }}
+        </button>
+      </div>
+
+      <!-- Installation Required -->
+      <div class="installation-section" *ngIf="!leapWalletService.isWalletInstalled()">
+        <div class="install-info">
+          <i class="fas fa-download"></i>
+          <h3>Leap Wallet Not Installed</h3>
+          <p>You need to install the Leap Wallet browser extension to connect to the Coreum blockchain.</p>
+        </div>
+
+        <div class="install-steps">
+          <div class="step">
+            <span class="step-number">1</span>
+            <span class="step-text">Visit the Leap Wallet website</span>
+          </div>
+          <div class="step">
+            <span class="step-number">2</span>
+            <span class="step-text">Install the browser extension</span>
+          </div>
+          <div class="step">
+            <span class="step-number">3</span>
+            <span class="step-text">Create or import your wallet</span>
+          </div>
+          <div class="step">
+            <span class="step-number">4</span>
+            <span class="step-text">Refresh this page and connect</span>
+          </div>
+        </div>
+
+        <button class="install-btn" (click)="openLeapWebsite()">
+          <i class="fas fa-external-link-alt"></i>
+          Get Leap Wallet
+        </button>
+      </div>
+
+      <!-- Features Section -->
+      <div class="features-section">
+        <h4>Why Connect Your Wallet?</h4>
+        <div class="features-list">
+          <div class="feature">
+            <i class="fas fa-plus-circle"></i>
+            <span>Create NFT raffles</span>
+          </div>
+          <div class="feature">
+            <i class="fas fa-ticket-alt"></i>
+            <span>Buy raffle tickets</span>
+          </div>
+          <div class="feature">
+            <i class="fas fa-trophy"></i>
+            <span>Win amazing NFT prizes</span>
+          </div>
+          <div class="feature">
+            <i class="fas fa-shield-alt"></i>
+            <span>Secure blockchain transactions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-section" *ngIf="error">
+        <div class="error-content">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>{{ error }}</p>
+        </div>
+        <button class="dismiss-error" (click)="dismissError()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="security-note">
+        <i class="fas fa-info-circle"></i>
+        <span>Your wallet information is never stored and remains secure.</span>
+      </div>
+    </div>
+  </div>
+</div>

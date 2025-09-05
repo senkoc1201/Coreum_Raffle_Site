@@ -1,0 +1,83 @@
+<div class="dashboard" *ngIf="currentRaffle">
+  <div class="container">
+    <!-- Main Raffle Card -->
+    <div class="raffle-card">
+      <div class="raffle-image">
+        <img [src]="currentRaffle.imageUrl" [alt]="currentRaffle.name" />
+        <div class="bear-mascot">
+          <img src="/assets/bear-mascot.svg" alt="Bear Mascot" />
+        </div>
+      </div>
+      
+      <div class="raffle-info">
+        <h2>{{ currentRaffle.name }}</h2>
+        <p class="contract-address">Contract: {{ currentRaffle.contractAddress }}</p>
+        
+        <div class="stats-grid">
+          <!-- Status -->
+          <div class="stat-card status-card">
+            <h3>Status</h3>
+            <div class="status" [ngClass]="currentRaffle.status.toLowerCase()">
+              <span class="status-dot"></span>
+              {{ currentRaffle.status }}
+            </div>
+            <div class="winner-info" *ngIf="currentRaffle.winner">
+              <i class="fas fa-trophy"></i>
+              Winner: {{ currentRaffle.winner | slice:0:6 }}...{{ currentRaffle.winner | slice:-4 }}
+            </div>
+          </div>
+          
+          <!-- Ticket Pool -->
+          <div class="stat-card">
+            <h3>Ticket Pool</h3>
+            <div class="big-number">{{ currentRaffle.totalSold }}/{{ currentRaffle.totalTickets }}</div>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+            </div>
+          </div>
+          
+          <!-- Total Generated -->
+          <div class="stat-card">
+            <h3>Total Generated</h3>
+            <div class="big-number">{{ currentRaffle.totalGenerated }} AVAX</div>
+            <div class="competition-bar">
+              <div class="completion-fill" [style.width.%]="getProgressPercentage()"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Purchase Section -->
+    <div class="purchase-section">
+      <h3>Purchase Tickets</h3>
+      <div class="ticket-info">
+        <span class="tickets-available">Number of tickets: {{ ticketQuantity }}</span>
+        <span class="remaining">Remaining tickets: {{ currentRaffle.remainingTickets }} tickets available</span>
+      </div>
+      
+      <div class="purchase-controls">
+        <div class="quantity-controls">
+          <button (click)="decreaseTickets()" [disabled]="ticketQuantity <= 1">-</button>
+          <span class="quantity">{{ ticketQuantity }}</span>
+          <button (click)="increaseTickets()" [disabled]="ticketQuantity >= currentRaffle.remainingTickets">+</button>
+        </div>
+        
+        <div class="price-info">
+          <span class="price-per-ticket">Price per ticket: {{ currentRaffle.pricePerTicket }} AVAX</span>
+          <span class="quantity-label">Quantity: {{ ticketQuantity }}</span>
+          <div class="total-price">Total: {{ (ticketQuantity * currentRaffle.pricePerTicket).toFixed(2) }} AVAX</div>
+        </div>
+        
+        <button class="purchase-btn" (click)="purchaseTickets()">
+          {{ walletService.isConnected ? 'Purchase Tickets' : 'Connect Wallet' }}
+        </button>
+      </div>
+      
+      <p class="disclaimer">By purchasing tickets, you agree to the raffle terms and conditions.</p>
+    </div>
+    
+    <!-- Participants Table -->
+    <app-participants-table></app-participants-table>
+  </div>
+</div>

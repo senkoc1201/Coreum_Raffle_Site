@@ -1,0 +1,89 @@
+<div class="main-dashboard" *ngIf="user">
+  <div class="container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <h1>Welcome to Raffle Platform</h1>
+      <div class="user-info">
+        <span class="address">{{ user.address | slice:0:8 }}...{{ user.address | slice:-6 }}</span>
+        <div class="roles">
+          <span 
+            class="role-badge" 
+            [class.creator]="userRoleService.hasRole('creator')"
+            *ngIf="userRoleService.hasRole('creator')">
+            Creator
+          </span>
+          <span 
+            class="role-badge player" 
+            *ngIf="userRoleService.hasRole('player')">
+            Player
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'create'"
+        [disabled]="!canCreateRaffles"
+        (click)="switchTab('create')">
+        <i class="fas fa-plus-circle"></i>
+        Create Raffle
+        <span class="tab-count" *ngIf="canCreateRaffles">{{ userRoleService.getEligibleNFTs().length }}</span>
+      </button>
+      
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'join'"
+        [disabled]="!canJoinRaffles"
+        (click)="switchTab('join')">
+        <i class="fas fa-dice"></i>
+        Join Raffles
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Loading State -->
+      <div class="loading-overlay" *ngIf="loading">
+        <div class="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading...</p>
+        </div>
+      </div>
+
+      <!-- Create Raffle Tab -->
+      <div class="tab-pane" [class.active]="activeTab === 'create'" *ngIf="canCreateRaffles">
+        <app-create-raffle></app-create-raffle>
+      </div>
+
+      <!-- Join Raffle Tab -->
+      <div class="tab-pane" [class.active]="activeTab === 'join'" *ngIf="canJoinRaffles">
+        <app-join-raffle></app-join-raffle>
+      </div>
+
+      <!-- No Access State -->
+      <div class="no-access" *ngIf="!canCreateRaffles && !canJoinRaffles">
+        <div class="empty-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h3>Access Required</h3>
+          <p>You need to connect your wallet and have eligible assets to use this platform.</p>
+          <button class="btn btn-primary" (click)="userRoleService.refreshUserData()">
+            <i class="fas fa-refresh"></i>
+            Refresh Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Not Connected State -->
+<div class="not-connected" *ngIf="!user">
+  <div class="empty-state">
+    <i class="fas fa-wallet"></i>
+    <h2>Connect Your Wallet</h2>
+    <p>Connect your Leap wallet to start creating and joining raffles on Coreum blockchain.</p>
+  </div>
+</div>

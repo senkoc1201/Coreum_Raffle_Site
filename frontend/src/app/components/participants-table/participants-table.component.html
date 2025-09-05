@@ -1,0 +1,52 @@
+<div class="participants-section">
+  <h3>Participants ({{ participants.length }})</h3>
+  
+  <!-- Debug info -->
+  <!-- <div *ngIf="participants.length === 0" style="color: red; padding: 10px;">
+    ⚠️ No participants data received
+  </div>
+  <div *ngIf="participants.length > 0" style="color: green; padding: 10px;">
+    ✅ {{ participants.length }} participants received - rendering table...
+  </div> -->
+  
+  <div class="table-container">
+    <table class="participants-table">
+      <thead>
+        <tr>
+          <th>Address</th>
+          <th>Tickets</th>
+          <th>Total Spent</th>
+          <th>Chance to Win</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let participant of paginatedParticipants; index as i">
+          <td class="address-cell">
+            <span class="address">{{ getAddress(participant) | slice:0:6 }}...{{ getAddress(participant) | slice:-4 }}</span>
+          </td>
+          <td class="tickets-cell">{{ getTickets(participant) }}</td>
+          <td class="spent-cell">{{ getTotalSpent(participant) }} TESTCORE</td>
+          <td class="chance-cell">{{ calculateWinChanceFor(participant).toFixed(2) }}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button 
+      class="pagination-btn" 
+      (click)="previousPage()" 
+      [disabled]="currentPage <= 1">
+      Previous
+    </button>
+    
+    <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+    
+    <button 
+      class="pagination-btn" 
+      (click)="nextPage()" 
+      [disabled]="currentPage >= totalPages">
+      Next
+    </button>
+  </div>
+</div>

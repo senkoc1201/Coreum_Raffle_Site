@@ -1,0 +1,7 @@
+<div class="app-container">
+  <app-header (walletModalOpen)="openWalletModal()"></app-header>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+  <app-leap-wallet-modal *ngIf="showWalletModal" (close)="closeWalletModal()"></app-leap-wallet-modal>
+</div>

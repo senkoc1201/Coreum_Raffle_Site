@@ -1,0 +1,102 @@
+<div class="raffle-details" *ngIf="raffle as r">
+  <!-- <div class="header">
+    <button class="back-btn" (click)="back()"><i class="fas fa-arrow-left"></i> Back</button>
+    <h2>{{ r.prizeNft.name }}</h2>
+  </div> -->
+
+  <div class="summary">
+    <div class="image">
+      <img [src]="r.prizeNft.imageUrl" [alt]="r.prizeNft.name" />
+    </div>
+    <div class="info">
+      <p class="description">{{ r.prizeNft.description }}</p>
+      <div class="meta">
+        <div class="meta-item"><i class="fas fa-clock"></i> Ends: {{ r.endsAt | date:'MMM d, y, HH:mm' }}</div>
+        <div class="meta-item"><i class="fas fa-ticket-alt"></i> {{ r.totalSold }} / {{ r.totalTickets }} tickets</div>
+        <div class="meta-item"><i class="fas fa-dollar-sign"></i> {{ r.ticketPrice }} TESTCORE per ticket</div>
+        <div class="meta-item"><i class="fas fa-user"></i> Creator: {{ r.creator | slice:0:8 }}...{{ r.creator | slice:-6 }}</div>
+      </div>
+      <div class="progress">
+        <div class="bar"><div class="fill" [style.width.%]="getProgressPercentage()"></div></div>
+        <span class="pct">{{ getProgressPercentage().toFixed(1) }}% Complete</span>
+      </div>
+
+      <div class="purchase" *ngIf="r.status === 'active' && getMaxBuyableTickets() > 0">
+        <div class="quantity-controls">
+          <button class="quantity-btn" (click)="adjustQuantity(-1)" [disabled]="ticketQuantity <= 1"><i class="fas fa-minus"></i></button>
+          <div class="quantity-display">
+            <span class="quantity">{{ ticketQuantity }}</span>
+            <span class="label">tickets</span>
+          </div>
+          <button class="quantity-btn" (click)="adjustQuantity(1)" [disabled]="ticketQuantity >= getMaxBuyableTickets()"><i class="fas fa-plus"></i></button>
+        </div>
+        <div class="purchase-summary">
+          <div class="total">Total: <strong>{{ getTotalCost() }} TESTCORE</strong></div>
+          <div class="balance" *ngIf="leapWalletService.isConnected">
+            Wallet Balance: <strong>{{ leapWalletService.balance }} TESTCORE</strong>
+          </div>
+          <div class="available">{{ getMaxBuyableTickets() }} tickets available</div>
+        </div>
+        <button class="buy-btn" (click)="buyTickets()" [disabled]="purchasing || !leapWalletService.isConnected">
+          <i class="fas fa-shopping-cart" *ngIf="!purchasing"></i>
+          <i class="fas fa-spinner fa-spin" *ngIf="purchasing"></i>
+          {{ purchasing ? 'Purchasing...' : 'Buy Tickets' }}
+        </button>
+      </div>
+
+      <div class="sold-out" *ngIf="r.status === 'active' && getMaxBuyableTickets() === 0">
+        <i class="fas fa-exclamation-circle"></i>
+        Sold Out
+      </div>
+    </div>
+  </div>
+
+  <div class="alerts">
+    <div class="alert alert-success" *ngIf="success">
+      <div class="alert-content">
+        <i class="fas fa-check-circle"></i>
+        <div class="alert-text">
+          <h4>Tickets Purchased Successfully!</h4>
+          <p>{{ success }}</p>
+          <p>🔄 Your tickets will appear in the participants table once the transaction is confirmed (~6 seconds)</p>
+        </div>
+      </div>
+      <button class="alert-close" (click)="dismissSuccess()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="alert alert-error" *ngIf="error">
+      <div class="alert-content">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div class="alert-text">
+          <h4>Purchase Failed</h4>
+          <p>{{ error }}</p>
+          <div class="faucet-info" *ngIf="error.includes('Insufficient funds')">
+            <hr>
+            <h5>🚰 Need Testnet Tokens?</h5>
+            <p>Get free TESTCORE tokens from the Coreum testnet faucet:</p>
+            <p><strong>🔗 <a href="https://docs.coreum.dev/docs/next/tools-and-ecosystem/faucet" target="_blank">Coreum Testnet Faucet</a></strong></p>
+            <p>Your wallet address: <code>{{ leapWalletService.address }}</code></p>
+            <button class="refresh-balance-btn" (click)="refreshBalance()">
+              <i class="fas fa-sync-alt"></i> Refresh Balance
+            </button>
+          </div>
+        </div>
+      </div>
+      <button class="alert-close" (click)="dismissError()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <app-participants-table [participants]="r.participants" [totalRaffleTickets]="r.totalTickets"></app-participants-table>
+</div>
+
+<div class="loading" *ngIf="loading">
+  <i class="fas fa-spinner fa-spin"></i>
+  Loading...
+</div>
+
+<div class="error" *ngIf="error">{{ error }}</div>
+
+

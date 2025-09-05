@@ -1,0 +1,44 @@
+<header class="header">
+  <div class="header-content">
+    <div class="logo">
+      <i class="fas fa-fire"></i>
+      <span>DEGEN Raffle</span>
+    </div>
+    
+    <div class="wallet-section">
+      <!-- Connected State -->
+      <div class="wallet-info" *ngIf="leapWalletService.isConnected">
+        <div class="user-address">
+          {{ leapWalletService.address | slice:0:8 }}...{{ leapWalletService.address | slice:-6 }}
+        </div>
+        <div class="user-roles" *ngIf="userRoleService.currentUser">
+          <span 
+            class="role-badge creator" 
+            *ngIf="userRoleService.hasRole('creator')">
+            Creator
+          </span>
+          <span 
+            class="role-badge player" 
+            *ngIf="userRoleService.hasRole('player')">
+            Player
+          </span>
+        </div>
+        <button 
+          class="disconnect-btn" 
+          (click)="disconnectWallet()"
+          title="Disconnect Wallet">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+
+      <!-- Disconnected State -->
+      <button 
+        class="connect-wallet-btn" 
+        (click)="openWalletModal()"
+        *ngIf="!leapWalletService.isConnected">
+        <i class="fas fa-wallet"></i>
+        Connect Leap Wallet
+      </button>
+    </div>
+  </div>
+</header>

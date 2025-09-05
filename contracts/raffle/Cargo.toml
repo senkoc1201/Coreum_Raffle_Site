@@ -1,0 +1,36 @@
+[package]
+name = "coreum-raffle"
+version = "0.1.0"
+edition = "2021"
+authors = ["RaffleBoi"]
+license = "Apache-2.0"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+backtraces = []
+
+[dependencies]
+cosmwasm-std = "1.5.0"
+cosmwasm-schema = "1.5.0"
+cw2 = "1.1.1"
+cw-storage-plus = "1.2.0"
+cw-utils = "1.0.2"
+cw721 = "0.18.0"
+cw20 = "1.1.2"
+schemars = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "1.0"
+serde_json = "1.0"
+hex = "0.4"
+serde-json-wasm = "0.5"
+bls12_381 = "0.8"
+sha2 = "0.10"
+
+# Pin base64ct to <=1.7 so Rust 1.73 can build it
+base64ct = "=1.6.0"
+
+[dev-dependencies]
+cosmwasm-schema = "1.5.0"
+

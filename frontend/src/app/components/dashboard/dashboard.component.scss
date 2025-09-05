@@ -1,0 +1,256 @@
+.dashboard {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.raffle-card {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  background: rgba(45, 45, 45, 0.8);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(32, 199, 137, 0.2);
+}
+
+.raffle-image {
+  position: relative;
+  
+  img {
+    width: 100%;
+    border-radius: 12px;
+  }
+  
+  .bear-mascot {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 80px;
+    height: 80px;
+    
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.raffle-info {
+  h2 {
+    color: #20C789;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+  }
+  
+  .contract-address {
+    color: #888;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: rgba(26, 26, 26, 0.8);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(32, 199, 137, 0.1);
+  
+  h3 {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  
+  .big-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #20C789;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  
+  &.closed {
+    color: #f44336;
+    .status-dot { background: #f44336; }
+  }
+  
+  &.active {
+    color: #4caf50;
+    .status-dot { background: #4caf50; }
+  }
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.winner-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  color: #20C789;
+  
+  i {
+    color: #20C789;
+  }
+}
+
+.progress-bar, .completion-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill, .completion-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #20C789, #1BAE73);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.purchase-section {
+  background: rgba(45, 45, 45, 0.8);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(32, 199, 137, 0.2);
+  
+  h3 {
+    color: #20C789;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+}
+
+.ticket-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  
+  .tickets-available {
+    color: #fff;
+  }
+  
+  .remaining {
+    color: #888;
+  }
+}
+
+.purchase-controls {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2rem;
+  align-items: center;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #20C789;
+    background: transparent;
+    color: #20C789;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover:not(:disabled) {
+      background: #20C789;
+      color: #ffffff;
+    }
+    
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+  
+  .quantity {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    min-width: 30px;
+    text-align: center;
+  }
+}
+
+.price-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  .price-per-ticket, .quantity-label {
+    color: #888;
+    font-size: 0.9rem;
+  }
+  
+  .total-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #20C789;
+  }
+}
+
+.purchase-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #20C789 0%, #1BAE73 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(32, 199, 137, 0.3);
+  }
+}
+
+.disclaimer {
+  color: #666;
+  font-size: 0.8rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .raffle-card {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .purchase-controls {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dashboard {
+    padding: 1rem;
+  }
+}

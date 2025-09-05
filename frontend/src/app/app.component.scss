@@ -1,0 +1,25 @@
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #ffffff;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/assets/bear-mascot.svg');
+    background-repeat: repeat;
+    background-size: 100px;
+    opacity: 0.05;
+    z-index: -1;
+  }
+}
+
+.main-content {
+  padding-top: 80px; // Account for fixed header
+  min-height: calc(100vh - 80px);
+}

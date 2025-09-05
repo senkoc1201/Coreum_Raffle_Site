@@ -1,0 +1,225 @@
+<div class="join-raffle-container">
+  <div class="section-header">
+    <h2><i class="fas fa-dice"></i> Active Raffles</h2>
+    <p>Join exciting NFT raffles and win amazing prizes</p>
+    <button class="refresh-btn" (click)="refreshRaffles()" [disabled]="loading">
+      <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Success Message -->
+  <div class="alert alert-success" *ngIf="success">
+    <div class="alert-content">
+      <i class="fas fa-check-circle"></i>
+      <div>
+        <h4>Purchase Successful!</h4>
+        <p>{{ success }}</p>
+      </div>
+    </div>
+    <button class="alert-close" (click)="dismissSuccess()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert alert-error" *ngIf="error">
+    <div class="alert-content">
+      <i class="fas fa-exclamation-triangle"></i>
+      <div>
+        <h4>Error</h4>
+        <p>{{ error }}</p>
+      </div>
+    </div>
+    <button class="alert-close" (click)="dismissError()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading && activeRaffles.length === 0">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Loading active raffles...</p>
+  </div>
+
+  <!-- Raffles Grid -->
+  <div class="raffles-grid" *ngIf="activeRaffles.length > 0">
+    <div class="raffle-card" *ngFor="let raffle of activeRaffles" (click)="openRaffleDetails(raffle)" style="cursor:pointer">
+      <!-- Raffle Header -->
+      <div class="raffle-header">
+        <div class="raffle-image">
+          <img [src]="raffle.prizeNft.imageUrl" [alt]="raffle.prizeNft.name" />
+          <div class="time-remaining">
+            <i class="fas fa-clock"></i>
+            {{ getTimeRemaining(raffle) }}
+          </div>
+        </div>
+        
+        <div class="raffle-info">
+          <h3>{{ raffle.prizeNft.name }}</h3>
+          <p class="description">{{ raffle.prizeNft.description }}</p>
+          <div class="creator-info">
+            <span class="creator-label">Created by:</span>
+            <span class="creator-address">{{ raffle.creator | slice:0:8 }}...{{ raffle.creator | slice:-6 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Raffle Stats -->
+      <div class="raffle-stats">
+        <div class="stat-row">
+          <div class="stat">
+            <i class="fas fa-ticket-alt"></i>
+            <div class="stat-content">
+              <span class="stat-value">{{ raffle.totalSold }} / {{ raffle.totalTickets }}</span>
+              <span class="stat-label">Tickets Sold</span>
+            </div>
+          </div>
+          
+          <div class="stat">
+            <i class="fas fa-dollar-sign"></i>
+            <div class="stat-content">
+              <span class="stat-value">{{ raffle.ticketPrice }} TESTCORE</span>
+              <span class="stat-label">Price per Ticket</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="progress-section">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getProgressPercentage(raffle)"></div>
+          </div>
+          <span class="progress-text">{{ getProgressPercentage(raffle).toFixed(1) }}% Complete</span>
+        </div>
+      </div>
+
+      <!-- User's Participation -->
+      <div class="user-participation" *ngIf="getUserTicketsForRaffle(raffle.id) as userTicket">
+        <div class="participation-header">
+          <i class="fas fa-user-check"></i>
+          <span>Your Participation</span>
+        </div>
+        <div class="participation-details">
+          <div class="detail">
+            <span class="detail-label">Tickets Owned:</span>
+            <span class="detail-value">{{ userTicket.ticketNumbers.length }}</span>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Ticket Numbers:</span>
+            <span class="detail-value">{{ userTicket.ticketNumbers.join(', ') }}</span>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Purchase Date:</span>
+            <span class="detail-value">{{ userTicket.purchaseDate | date:'MMM dd, yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Purchase Section removed for list view -->
+
+      <!-- Sold Out State -->
+      <div class="sold-out-state" *ngIf="raffle.status === 'active' && (raffle.totalTickets - raffle.totalSold) === 0">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>Sold Out</span>
+      </div>
+
+      <!-- Completed State -->
+      <div class="completed-state" *ngIf="raffle.status === 'completed'">
+        <div class="winner-announcement" *ngIf="raffle.winner">
+          <i class="fas fa-trophy"></i>
+          <div class="winner-info">
+            <span class="winner-label">Winner:</span>
+            <span class="winner-address">{{ raffle.winner | slice:0:8 }}...{{ raffle.winner | slice:-6 }}</span>
+          </div>
+          <div class="winner-status" *ngIf="getUserTicketsForRaffle(raffle.id) as userTicket">
+            <span 
+              class="status-badge"
+              [class.winner]="userTicket.isWinner"
+              [class.loser]="!userTicket.isWinner">
+              {{ userTicket.isWinner ? 'You Won!' : 'Not This Time' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ended Raffles Section -->
+  <div class="section-header" style="margin-top:2rem">
+    <h2><i class="fas fa-flag-checkered"></i> Ended Raffles</h2>
+  </div>
+  <div class="raffles-grid" *ngIf="endedRaffles.length > 0">
+    <div class="raffle-card" *ngFor="let raffle of endedRaffles" (click)="openRaffleDetails(raffle)" style="cursor:pointer">
+      <div class="raffle-header">
+        <div class="raffle-image">
+          <img [src]="raffle.prizeNft.imageUrl" [alt]="raffle.prizeNft.name" />
+          <div class="time-remaining">
+            <i class="fas fa-clock"></i>
+            {{ getTimeRemaining(raffle) }}
+          </div>
+        </div>
+        <div class="raffle-info">
+          <h3>{{ raffle.prizeNft.name }}</h3>
+          <p class="description">{{ raffle.prizeNft.description }}</p>
+          <div class="creator-info">
+            <span class="creator-label">Created by:</span>
+            <span class="creator-address">{{ raffle.creator | slice:0:8 }}...{{ raffle.creator | slice:-6 }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="raffle-stats">
+        <div class="stat-row">
+          <div class="stat">
+            <i class="fas fa-ticket-alt"></i>
+            <div class="stat-content">
+              <span class="stat-value">{{ raffle.totalSold }} / {{ raffle.totalTickets }}</span>
+              <span class="stat-label">Tickets Sold</span>
+            </div>
+          </div>
+          <div class="stat">
+            <i class="fas fa-dollar-sign"></i>
+            <div class="stat-content">
+              <span class="stat-value">{{ raffle.ticketPrice }} TESTCORE</span>
+              <span class="stat-label">Price per Ticket</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Winner Display for Completed Raffles -->
+        <div class="winner-section" *ngIf="raffle.status === 'completed' && raffle.winner">
+          <div class="winner-announcement">
+            <i class="fas fa-trophy"></i>
+            <div class="winner-info">
+              <span class="winner-label">Winner:</span>
+              <span class="winner-address">{{ raffle.winner | slice:0:8 }}...{{ raffle.winner | slice:-6 }}</span>
+            </div>
+            <div class="winning-ticket-info" *ngIf="raffle.winningTicketIndex !== undefined">
+              <span class="ticket-label">Winning Ticket:</span>
+              <span class="ticket-number">#{{ raffle.winningTicketIndex + 1 }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="progress-section">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getProgressPercentage(raffle)"></div>
+          </div>
+          <span class="progress-text">{{ getProgressPercentage(raffle).toFixed(1) }}% Complete</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Raffles State -->
+  <!-- <div class="no-raffles" *ngIf="!loading && activeRaffles.length === 0">
+    <div class="empty-state">
+      <i class="fas fa-dice"></i>
+      <h3>No Active Raffles</h3>
+      <p>There are currently no active raffles available. Check back later or create your own raffle!</p>
+      <button class="btn btn-primary" (click)="refreshRaffles()">
+        <i class="fas fa-refresh"></i>
+        Refresh
+      </button>
+    </div>
+  </div> -->
+</div>

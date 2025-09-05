@@ -1,0 +1,197 @@
+<div class="create-raffle-container">
+  <div class="section-header">
+    <h2><i class="fas fa-plus-circle"></i> Create New Raffle</h2>
+    <p>Select an NFT from your collection and set up raffle parameters</p>
+  </div>
+
+  <!-- Success Message -->
+  <div class="alert alert-success" *ngIf="success">
+    <div class="alert-content">
+      <i class="fas fa-check-circle"></i>
+      <div>
+        <h4>Raffle Created Successfully! 🎉</h4>
+        <p><strong>Transaction Hash:</strong> {{ createdRaffleId }}</p>
+        <p>✅ Your NFT has been escrowed in the smart contract</p>
+        <p>🔄 Your raffle will be visible to players once the transaction is confirmed (~6 seconds)</p>
+        <p>📊 Check the backend logs to see the raffle indexing in real-time</p>
+      </div>
+    </div>
+    <button class="alert-close" (click)="dismissSuccess()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert alert-error" *ngIf="error">
+    <div class="alert-content">
+      <i class="fas fa-exclamation-triangle"></i>
+      <div>
+        <h4>Error Creating Raffle</h4>
+        <p>{{ error }}</p>
+      </div>
+    </div>
+    <button class="alert-close" (click)="dismissError()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="create-raffle-content">
+    <!-- NFT Selection -->
+    <div class="nft-selection-section">
+      <h3><i class="fas fa-image"></i> Select NFT to Raffle</h3>
+      
+      <div class="nft-grid" *ngIf="eligibleNFTs.length > 0">
+        <div 
+          class="nft-card"
+          *ngFor="let nft of eligibleNFTs"
+          [class.selected]="selectedNFT?.id === nft.id"
+          (click)="selectNFT(nft)">
+          <div class="nft-image">
+            <img [src]="nft.imageUrl" [alt]="nft.name" />
+            <div class="nft-overlay" *ngIf="selectedNFT?.id === nft.id">
+              <i class="fas fa-check-circle"></i>
+            </div>
+          </div>
+          <div class="nft-info">
+            <h4>{{ nft.name }}</h4>
+            <p>{{ nft.description }}</p>
+            <span class="token-id">Token ID: {{ nft.tokenId }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-nfts" *ngIf="eligibleNFTs.length === 0">
+        <i class="fas fa-info-circle"></i>
+        <p>You don't have any eligible NFTs for creating raffles.</p>
+      </div>
+    </div>
+
+    <!-- Raffle Configuration Form -->
+    <form [formGroup]="createRaffleForm" (ngSubmit)="onSubmit()" class="raffle-form" *ngIf="eligibleNFTs.length > 0">
+      <h3><i class="fas fa-cogs"></i> Raffle Configuration</h3>
+      
+      <div class="form-grid">
+        <!-- Ticket Price -->
+        <div class="form-group">
+          <label for="ticketPrice">
+            <i class="fas fa-dollar-sign"></i>
+            Ticket Price (CORE)
+          </label>
+          <input
+            id="ticketPrice"
+            type="number"
+            formControlName="ticketPrice"
+            placeholder="Enter ticket price"
+            min="1"
+            max="10000"
+            step="0.1">
+          <div class="error-message" *ngIf="getFormError('ticketPrice')">
+            {{ getFormError('ticketPrice') }}
+          </div>
+        </div>
+
+        <!-- Max Tickets -->
+        <div class="form-group">
+          <label for="maxTickets">
+            <i class="fas fa-ticket-alt"></i>
+            Maximum Tickets
+          </label>
+          <input
+            id="maxTickets"
+            type="number"
+            formControlName="maxTickets"
+            placeholder="Enter max tickets"
+            min="10"
+            max="10000"
+            step="1">
+          <div class="error-message" *ngIf="getFormError('maxTickets')">
+            {{ getFormError('maxTickets') }}
+          </div>
+        </div>
+
+        <!-- Duration -->
+        <div class="form-group">
+          <label for="duration">
+            <i class="fas fa-clock"></i>
+            Duration (Hours)
+          </label>
+          <select id="duration" formControlName="duration">
+            <option value="1">1 Hour</option>
+            <option value="6">6 Hours</option>
+            <option value="12">12 Hours</option>
+            <option value="24">1 Day</option>
+            <option value="48">2 Days</option>
+            <option value="72">3 Days</option>
+            <option value="168">1 Week</option>
+          </select>
+          <div class="error-message" *ngIf="getFormError('duration')">
+            {{ getFormError('duration') }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group full-width">
+        <label for="description">
+          <i class="fas fa-edit"></i>
+          Description (Optional)
+        </label>
+        <textarea
+          id="description"
+          formControlName="description"
+          placeholder="Add a description for your raffle (max 500 characters)"
+          rows="3"
+          maxlength="500"></textarea>
+        <div class="character-count">
+          {{ createRaffleForm.get('description')?.value?.length || 0 }} / 500
+        </div>
+        <div class="error-message" *ngIf="getFormError('description')">
+          {{ getFormError('description') }}
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="raffle-preview" *ngIf="selectedNFT">
+        <h4><i class="fas fa-eye"></i> Raffle Preview</h4>
+        <div class="preview-content">
+          <div class="preview-nft">
+            <img [src]="selectedNFT.imageUrl" [alt]="selectedNFT.name" />
+          </div>
+          <div class="preview-details">
+            <h5>{{ selectedNFT.name }}</h5>
+            <div class="preview-stats">
+              <div class="stat">
+                <span class="label">Ticket Price:</span>
+                <span class="value">{{ createRaffleForm.get('ticketPrice')?.value }} CORE</span>
+              </div>
+              <div class="stat">
+                <span class="label">Max Tickets:</span>
+                <span class="value">{{ createRaffleForm.get('maxTickets')?.value }}</span>
+              </div>
+              <div class="stat">
+                <span class="label">Duration:</span>
+                <span class="value">{{ createRaffleForm.get('duration')?.value }} hours</span>
+              </div>
+              <div class="stat">
+                <span class="label">Potential Revenue:</span>
+                <span class="value">{{ (createRaffleForm.get('ticketPrice')?.value || 0) * (createRaffleForm.get('maxTickets')?.value || 0) }} CORE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary btn-large"
+          [disabled]="loading || createRaffleForm.invalid || !selectedNFT">
+          <i class="fas fa-rocket" *ngIf="!loading"></i>
+          <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          {{ loading ? 'Creating Raffle...' : 'Create Raffle' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
