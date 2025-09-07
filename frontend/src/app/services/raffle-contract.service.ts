@@ -16,8 +16,8 @@ export interface CreateRaffleParams {
   providedIn: 'root'
 })
 export class RaffleContractService {
-  // Your deployed raffle contract address
-  private readonly RAFFLE_CONTRACT_ADDRESS = 'testcore1lqaqslyw3kqj3tysa6cywh44e8mm2qyx0ps8qqt076kkna6zk8wsfl5p50';
+  // Your deployed raffle contract address (Coreum Mainnet)
+  private readonly RAFFLE_CONTRACT_ADDRESS = 'core1nw29p6jfmm0d62dw2m0g7sz5zw8q6sgjt7pg6scgpz4s4ylkye8s03peml';
 
   constructor(private leapWallet: LeapWalletService) {}
 
@@ -38,7 +38,7 @@ export class RaffleContractService {
       // Note: nft_contract and token_id are automatically extracted from the CW721 transfer
       const raffleMsg = {
         price: {
-          denom: 'utestcore', // Coreum testnet token  
+          denom: 'ucore', // Coreum mainnet token  
           amount: params.ticketPrice
         },
         max_tickets: params.maxTickets,
@@ -86,7 +86,7 @@ export class RaffleContractService {
       const totalAmount = (Number(ticketPrice) * ticketCount).toString();
       
       console.log(`🎫 Buying ${ticketCount} tickets for raffle ${raffleId}`);
-      console.log(`💰 Total payment: ${totalAmount} utestcore (${this.ucoreToCore(totalAmount)} TESTCORE)`);
+      console.log(`💰 Total payment: ${totalAmount} ucore (${this.ucoreToCore(totalAmount)} CORE)`);
 
       const msg = {
         buy_tickets: {
@@ -96,7 +96,7 @@ export class RaffleContractService {
       };
 
       const funds = [{
-        denom: 'utestcore', // Coreum testnet token
+        denom: 'ucore', // Coreum mainnet token
         amount: totalAmount
       }];
 
@@ -173,7 +173,7 @@ export class RaffleContractService {
    * @param params - Parameters to validate
    */
   private validateRaffleParams(params: CreateRaffleParams): void {
-    if (!params.nftContract || !params.nftContract.startsWith('testcore')) {
+    if (!params.nftContract || !params.nftContract.startsWith('core')) {
       throw new Error('Invalid NFT contract address');
     }
 
@@ -201,21 +201,21 @@ export class RaffleContractService {
   }
 
   /**
-   * Convert TESTCORE amount to microTESTCORE (utestcore)
-   * @param testcoreAmount - Amount in TESTCORE
-   * @returns Amount in utestcore
+   * Convert CORE amount to microCORE (ucore)
+   * @param coreAmount - Amount in CORE
+   * @returns Amount in ucore
    */
-  coreToUcore(testcoreAmount: number): string {
-    return (testcoreAmount * 1_000_000).toString();
+  coreToUcore(coreAmount: number): string {
+    return (coreAmount * 1_000_000).toString();
   }
 
   /**
-   * Convert microTESTCORE to TESTCORE
-   * @param utestcoreAmount - Amount in utestcore
-   * @returns Amount in TESTCORE
+   * Convert microCORE to CORE
+   * @param ucoreAmount - Amount in ucore
+   * @returns Amount in CORE
    */
-  ucoreToCore(utestcoreAmount: string): number {
-    return Number(utestcoreAmount) / 1_000_000;
+  ucoreToCore(ucoreAmount: string): number {
+    return Number(ucoreAmount) / 1_000_000;
   }
 
   /**

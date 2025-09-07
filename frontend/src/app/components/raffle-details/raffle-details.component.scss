@@ -49,4 +49,105 @@
 .alert-success { background: rgba(76, 175, 80, .15); color: #9be79e; }
 .alert-error { background: rgba(244, 67, 54, .15); color: #ff8a80; }
 
+// Participants Section
+.participants-section {
+  margin-top: 2rem;
+  
+  h3 {
+    color: #20C789;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.participants-table {
+  background: rgba(45, 45, 45, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(32, 199, 137, 0.2);
+  overflow: hidden;
+}
+
+.participants-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(32, 199, 137, 0.1);
+  border-bottom: 1px solid rgba(32, 199, 137, 0.2);
+  font-weight: 600;
+  color: #20C789;
+}
+
+.participants-body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.participant-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background: rgba(32, 199, 137, 0.05);
+  }
+}
+
+.col-address {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.col-tickets {
+  text-align: center;
+  font-weight: 600;
+  color: #20C789;
+}
+
+.col-spent {
+  text-align: right;
+  font-weight: 600;
+}
+
+.col-joined {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.no-participants {
+  text-align: center;
+  padding: 2rem;
+  color: #888;
+  
+  i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #20C789;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .participants-header,
+  .participant-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  
+  .col-spent,
+  .col-joined {
+    display: none;
+  }
+}
+
 

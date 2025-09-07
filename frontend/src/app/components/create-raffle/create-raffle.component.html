@@ -38,16 +38,40 @@
   <div class="create-raffle-content">
     <!-- NFT Selection -->
     <div class="nft-selection-section">
-      <h3><i class="fas fa-image"></i> Select NFT to Raffle</h3>
+      <div class="nft-section-header">
+        <h3><i class="fas fa-image"></i> Select NFT to Raffle</h3>
+        <button class="refresh-nfts-btn" (click)="refreshNFTs()" title="Refresh NFTs">
+          <i class="fas fa-sync-alt"></i>
+          Refresh NFTs
+        </button>
+      </div>
       
+      <!-- Pagination Controls (Top) -->
+      <div class="pagination-controls" *ngIf="eligibleNFTs.length > 0">
+        <div class="pagination-info">
+          <span>{{ paginationInfo }}</span>
+        </div>
+        <div class="pagination-size-selector">
+          <label for="pageSize">Show:</label>
+          <select id="pageSize" [value]="itemsPerPage" (change)="onPageSizeChange($event)">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }} per page</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- NFT Grid -->
       <div class="nft-grid" *ngIf="eligibleNFTs.length > 0">
         <div 
           class="nft-card"
-          *ngFor="let nft of eligibleNFTs"
+          *ngFor="let nft of paginatedNFTs"
           [class.selected]="selectedNFT?.id === nft.id"
           (click)="selectNFT(nft)">
           <div class="nft-image">
-            <img [src]="nft.imageUrl" [alt]="nft.name" />
+            <img 
+              [src]="nft.imageUrl" 
+              [alt]="nft.name" 
+              (error)="onImageError($event, nft)"
+              (load)="onImageLoad($event, nft)" />
             <div class="nft-overlay" *ngIf="selectedNFT?.id === nft.id">
               <i class="fas fa-check-circle"></i>
             </div>
@@ -60,9 +84,43 @@
         </div>
       </div>
 
+      <!-- Pagination Controls (Bottom) -->
+      <div class="pagination-navigation" *ngIf="eligibleNFTs.length > 0 && totalPages > 1">
+        <button 
+          class="pagination-btn"
+          [disabled]="!hasPreviousPage"
+          (click)="previousPage()"
+          title="Previous page">
+          <i class="fas fa-chevron-left"></i>
+          Previous
+        </button>
+        
+        <div class="pagination-pages">
+          <button 
+            *ngFor="let page of getPageNumbers()"
+            class="pagination-page-btn"
+            [class.active]="page === currentPage"
+            [class.ellipsis]="page === '...'"
+            [disabled]="page === '...'"
+            (click)="onPageClick(page)">
+            {{ page }}
+          </button>
+        </div>
+        
+        <button 
+          class="pagination-btn"
+          [disabled]="!hasNextPage"
+          (click)="nextPage()"
+          title="Next page">
+          Next
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
       <div class="no-nfts" *ngIf="eligibleNFTs.length === 0">
         <i class="fas fa-info-circle"></i>
-        <p>You don't have any eligible NFTs for creating raffles.</p>
+        <p *ngIf="!leapWalletService.isConnected">Please connect your Leap wallet to view your NFTs.</p>
+        <p *ngIf="leapWalletService.isConnected">No NFTs found in your wallet. NFT querying functionality needs to be implemented to fetch your actual NFTs from the blockchain.</p>
       </div>
     </div>
 

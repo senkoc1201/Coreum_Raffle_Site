@@ -6,12 +6,11 @@ import { ApiService } from '../../services/api.service';
 import { LeapWalletService } from '../../services/leap-wallet.service';
 import { RaffleContractService } from '../../services/raffle-contract.service';
 import { RaffleStatus } from '../../models/user.model';
-import { ParticipantsTableComponent } from '../participants-table/participants-table.component';
 
 @Component({
   selector: 'app-raffle-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, ParticipantsTableComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './raffle-details.component.html',
   styleUrls: ['./raffle-details.component.scss']
 })
@@ -34,6 +33,14 @@ export class RaffleDetailsComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       const raffleId = params['id'];
+      if (raffleId) {
+        this.load(raffleId);
+      }
+    });
+    
+    // Also check query parameters for raffle-detail route
+    this.route.queryParams.subscribe(queryParams => {
+      const raffleId = queryParams['id'] || queryParams['raffleId'];
       if (raffleId) {
         this.load(raffleId);
       }
@@ -124,13 +131,13 @@ export class RaffleDetailsComponent implements OnInit {
       const walletBalance = Number(this.leapWalletService.balance);
       
       if (walletBalance < totalCostCore) {
-        this.error = `Insufficient funds! You need ${totalCostCore} TESTCORE but only have ${walletBalance} TESTCORE. Please add funds to your wallet using the Coreum testnet faucet.`;
+        this.error = `Insufficient funds! You need ${totalCostCore} CORE but only have ${walletBalance} CORE. Please add funds to your wallet.`;
         return;
       }
       
       console.log(`🎫 Attempting to buy ${this.ticketQuantity} tickets`);
-      console.log(`💰 Ticket price: ${this.raffle.ticketPrice} TESTCORE (${ticketPriceUcore} utestcore)`);
-      console.log(`💳 Total cost: ${totalCostCore} TESTCORE`);
+      console.log(`💰 Ticket price: ${this.raffle.ticketPrice} CORE (${ticketPriceUcore} ucore)`);
+      console.log(`💳 Total cost: ${totalCostCore} CORE`);
 
       // Buy tickets via smart contract
       const txHash = await this.raffleContractService.buyTickets(
@@ -199,7 +206,7 @@ export class RaffleDetailsComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/join']);
+    this.router.navigate(['/dashboard']);
   }
 
   dismissSuccess() {
@@ -213,7 +220,7 @@ export class RaffleDetailsComponent implements OnInit {
   async refreshBalance() {
     try {
       await this.leapWalletService.updateBalance();
-      console.log(`🔄 Balance refreshed: ${this.leapWalletService.balance} TESTCORE`);
+      console.log(`🔄 Balance refreshed: ${this.leapWalletService.balance} CORE`);
     } catch (error) {
       console.error('Failed to refresh balance:', error);
     }

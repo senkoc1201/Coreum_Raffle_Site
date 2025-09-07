@@ -98,13 +98,43 @@
 }
 
 .nft-selection-section {
-  h3 {
-    color: #20C789;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+  .nft-section-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    
+    h3 {
+      color: #20C789;
+      font-size: 1.5rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .refresh-nfts-btn {
+      background: #20C789;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      &:hover {
+        background: #1ba374;
+        transform: translateY(-1px);
+      }
+      
+      i {
+        font-size: 0.8rem;
+      }
+    }
   }
 }
 
@@ -212,6 +242,130 @@
   p {
     color: #ccc;
     font-size: 1.1rem;
+  }
+}
+
+// Pagination Controls
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(45, 45, 45, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(32, 199, 137, 0.2);
+  
+  .pagination-info {
+    color: #ccc;
+    font-size: 0.9rem;
+  }
+  
+  .pagination-size-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    label {
+      color: #20C789;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    select {
+      padding: 0.5rem;
+      background: rgba(26, 26, 26, 0.8);
+      border: 1px solid rgba(32, 199, 137, 0.3);
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.9rem;
+      
+      &:focus {
+        outline: none;
+        border-color: #20C789;
+      }
+    }
+  }
+}
+
+.pagination-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 1rem;
+  
+  .pagination-btn {
+    background: rgba(32, 199, 137, 0.1);
+    border: 1px solid rgba(32, 199, 137, 0.3);
+    color: #20C789;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    &:hover:not(:disabled) {
+      background: rgba(32, 199, 137, 0.2);
+      border-color: #20C789;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    i {
+      font-size: 0.8rem;
+    }
+  }
+  
+  .pagination-pages {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0 1rem;
+    
+    .pagination-page-btn {
+      background: rgba(45, 45, 45, 0.6);
+      border: 1px solid rgba(32, 199, 137, 0.2);
+      color: #ccc;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      min-width: 40px;
+      transition: all 0.3s ease;
+      
+      &:hover:not(:disabled) {
+        background: rgba(32, 199, 137, 0.1);
+        border-color: rgba(32, 199, 137, 0.4);
+      }
+      
+      &.active {
+        background: #20C789;
+        border-color: #20C789;
+        color: white;
+      }
+      
+      &.ellipsis {
+        cursor: default;
+        background: transparent;
+        border: none;
+        
+        &:hover {
+          background: transparent;
+        }
+      }
+      
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
   }
 }
 
@@ -419,5 +573,40 @@
   
   .raffle-form {
     padding: 1rem;
+  }
+  
+  // Mobile pagination styles
+  .pagination-controls {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    
+    .pagination-info {
+      order: 2;
+    }
+    
+    .pagination-size-selector {
+      order: 1;
+    }
+  }
+  
+  .pagination-navigation {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    
+    .pagination-btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+    
+    .pagination-pages {
+      margin: 0 0.5rem;
+      
+      .pagination-page-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+        min-width: 35px;
+      }
+    }
   }
 }

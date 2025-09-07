@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { NFT, RaffleStatus, CreateRaffleRequest, BuyTicketRequest, UserTicket, RaffleParticipant } from '../models/user.model';
-import { BlockchainNftService } from './blockchain-nft.service';
+import { LeapWalletService } from './leap-wallet.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private blockchainNftService: BlockchainNftService
+    private leapWalletService: LeapWalletService
   ) {}
 
   // Store off-chain metadata (description) for a raffle
@@ -139,10 +139,28 @@ export class ApiService {
     try {
       console.log(`🔍 Querying blockchain for NFTs owned by address: ${address}`);
       
-      // Query blockchain directly for user's NFTs
-      const discoveredNFTs = await this.blockchainNftService.discoverUserNFTs(address);
+      // Use Leap wallet service to fetch NFTs
+      await this.leapWalletService.fetchNFTs();
+      const walletNFTs = this.leapWalletService.nfts;
       
-      console.log(`✅ Blockchain returned ${discoveredNFTs.length} NFTs for ${address}`);
+      // Convert wallet NFT format to API format
+      const discoveredNFTs: NFT[] = walletNFTs.map(nft => ({
+        id: nft.id,
+        tokenId: nft.tokenId,
+        collectionAddress: nft.contract,
+        name: nft.name,
+        description: nft.description || '',
+        imageUrl: nft.image,
+        isEligibleForRaffle: true,
+        metadata: {
+          name: nft.name,
+          description: nft.description,
+          image: nft.image,
+          collection: nft.collection
+        }
+      }));
+      
+      console.log(`✅ Leap wallet service returned ${discoveredNFTs.length} NFTs for ${address}`);
       
       // Log collections found
       const collections = [...new Set(discoveredNFTs.map(nft => nft.collectionAddress))];
@@ -153,7 +171,7 @@ export class ApiService {
       console.error(`❌ Failed to fetch NFTs from blockchain for ${address}:`, error);
       
       // Fallback: Create mock NFT for testing if blockchain query fails
-      if (address && address.startsWith('testcore')) {
+      if (address && address.startsWith('core')) {
         console.log(`🎭 Blockchain query failed, using fallback mock NFT for testing`);
         return [{
           id: `fallback:testtoken`,
@@ -161,7 +179,7 @@ export class ApiService {
           name: 'Fallback Test NFT',
           description: 'Mock NFT used when blockchain is unavailable',
           imageUrl: '/assets/bear-mascot.svg',
-          collectionAddress: 'testcore1tua2qt9ajjddj7xluul2lnc6pvpd02yjraqcz6yuje0tw8f36l3qn3xnnm',
+          collectionAddress: 'core1zmcgnyk93a9cgmftqxpu2lje88qngv3yzfwv3hzzpmjk0zytzr4q2py2qx',
           isEligibleForRaffle: true
         }];
       }

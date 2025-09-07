@@ -13,7 +13,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter([
       { path: '', component: MainDashboardComponent },
+      { path: 'dashboard', component: MainDashboardComponent },
       { path: 'join', component: JoinRaffleComponent },
+      { path: 'raffle-detail', component: RaffleDetailsComponent },
       { path: 'raffles/:id', component: RaffleDetailsComponent }
     ]),
     provideAnimationsAsync(),

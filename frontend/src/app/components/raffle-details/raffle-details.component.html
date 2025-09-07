@@ -13,7 +13,7 @@
       <div class="meta">
         <div class="meta-item"><i class="fas fa-clock"></i> Ends: {{ r.endsAt | date:'MMM d, y, HH:mm' }}</div>
         <div class="meta-item"><i class="fas fa-ticket-alt"></i> {{ r.totalSold }} / {{ r.totalTickets }} tickets</div>
-        <div class="meta-item"><i class="fas fa-dollar-sign"></i> {{ r.ticketPrice }} TESTCORE per ticket</div>
+        <div class="meta-item"><i class="fas fa-dollar-sign"></i> {{ r.ticketPrice }} CORE per ticket</div>
         <div class="meta-item"><i class="fas fa-user"></i> Creator: {{ r.creator | slice:0:8 }}...{{ r.creator | slice:-6 }}</div>
       </div>
       <div class="progress">
@@ -31,9 +31,9 @@
           <button class="quantity-btn" (click)="adjustQuantity(1)" [disabled]="ticketQuantity >= getMaxBuyableTickets()"><i class="fas fa-plus"></i></button>
         </div>
         <div class="purchase-summary">
-          <div class="total">Total: <strong>{{ getTotalCost() }} TESTCORE</strong></div>
+          <div class="total">Total: <strong>{{ getTotalCost() }} CORE</strong></div>
           <div class="balance" *ngIf="leapWalletService.isConnected">
-            Wallet Balance: <strong>{{ leapWalletService.balance }} TESTCORE</strong>
+            Wallet Balance: <strong>{{ leapWalletService.balance }} CORE</strong>
           </div>
           <div class="available">{{ getMaxBuyableTickets() }} tickets available</div>
         </div>
@@ -74,7 +74,7 @@
           <div class="faucet-info" *ngIf="error.includes('Insufficient funds')">
             <hr>
             <h5>🚰 Need Testnet Tokens?</h5>
-            <p>Get free TESTCORE tokens from the Coreum testnet faucet:</p>
+            <p>Get CORE tokens from exchanges or other users:</p>
             <p><strong>🔗 <a href="https://docs.coreum.dev/docs/next/tools-and-ecosystem/faucet" target="_blank">Coreum Testnet Faucet</a></strong></p>
             <p>Your wallet address: <code>{{ leapWalletService.address }}</code></p>
             <button class="refresh-balance-btn" (click)="refreshBalance()">
@@ -89,7 +89,31 @@
     </div>
   </div>
 
-  <app-participants-table [participants]="r.participants" [totalRaffleTickets]="r.totalTickets"></app-participants-table>
+  <!-- Participants Section -->
+  <div class="participants-section" *ngIf="r.participants && r.participants.length > 0">
+    <h3><i class="fas fa-users"></i> Participants ({{ r.participants.length }})</h3>
+    <div class="participants-table">
+      <div class="participants-header">
+        <div class="col-address">Address</div>
+        <div class="col-tickets">Tickets</div>
+        <div class="col-spent">Total Spent</div>
+        <div class="col-joined">Joined</div>
+      </div>
+      <div class="participants-body">
+        <div class="participant-row" *ngFor="let participant of r.participants">
+          <div class="col-address">{{ participant.address | slice:0:8 }}...{{ participant.address | slice:-6 }}</div>
+          <div class="col-tickets">{{ participant.ticketCount }}</div>
+          <div class="col-spent">{{ participant.totalSpent }} CORE</div>
+          <div class="col-joined">{{ participant.joinedAt | date:'MMM d, HH:mm' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="no-participants" *ngIf="!r.participants || r.participants.length === 0">
+    <i class="fas fa-info-circle"></i>
+    <p>No participants yet. Be the first to join this raffle!</p>
+  </div>
 </div>
 
 <div class="loading" *ngIf="loading">

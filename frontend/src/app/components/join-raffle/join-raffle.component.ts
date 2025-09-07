@@ -82,7 +82,7 @@ export class JoinRaffleComponent implements OnInit, OnDestroy {
   }
 
   openRaffleDetails(raffle: RaffleStatus) {
-    this.router.navigate(['/raffles', raffle.id]);
+    this.router.navigate(['/raffle-detail'], { queryParams: { id: raffle.id } });
   }
 
   // No quantity updates in list view; keep method to satisfy template references in conditional paths

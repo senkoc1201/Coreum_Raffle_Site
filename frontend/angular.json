@@ -16,7 +16,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist/degen-raffle",
             "index": "src/index.html",
@@ -24,6 +24,19 @@
             "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "customWebpackConfig": {
+              "path": "./webpack.config.js"
+            },
+            "allowedCommonJsDependencies": [
+              "@cosmjs/cosmwasm-stargate",
+              "@cosmjs/proto-signing",
+              "@cosmjs/stargate",
+              "@cosmjs/crypto",
+              "@cosmjs/encoding",
+              "@cosmjs/math",
+              "@cosmjs/utils",
+              "coreum-js"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -38,8 +51,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "3000kb",
-                  "maximumError": "4000kb"
+                  "maximumWarning": "5000kb",
+                  "maximumError": "6000kb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -61,7 +74,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "degen-raffle:build:production"
@@ -89,4 +102,3 @@
     "analytics": false
   }
 }
-
